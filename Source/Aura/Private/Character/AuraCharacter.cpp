@@ -8,6 +8,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Player/AuraPlayerController.h"
 #include "UI/HUD/AuraHUD.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
 
 
 AAuraCharacter::AAuraCharacter()
@@ -45,6 +46,56 @@ void AAuraCharacter::AddToXP_Implementation(int32 InXP)
 	AuraPlayerState->AddToXP(InXP);
 }
 
+void AAuraCharacter::LevelUp_Implementation()
+{
+
+}
+
+int32 AAuraCharacter::GetXP_Implementation() const
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->GetXP();
+}
+
+int32 AAuraCharacter::FindLevelForXP_Implementation(int32 InXP) const
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->FindLevelForXP(InXP);
+}
+
+int32 AAuraCharacter::GetAttributePointsReward_Implementation(int32 Level) const
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[Level].AttributePointReward;
+}
+
+int32 AAuraCharacter::GetSpellPointsReward_Implementation(int32 Level) const
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[Level].SpellPointAward;
+}
+
+void AAuraCharacter::AddToPlayerLevel_Implementation(int32 InPlayerLevel)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->AddToLevel(InPlayerLevel);
+}
+
+void AAuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
+{
+
+}
+
+void AAuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
+{
+
+}
+
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -65,7 +116,7 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
-int32 AAuraCharacter::GetPlayerLevel()
+int32 AAuraCharacter::GetPlayerLevel_Implementation()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
