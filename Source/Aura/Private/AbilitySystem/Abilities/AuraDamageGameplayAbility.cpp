@@ -4,7 +4,7 @@
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Interactions/CombatInterface.h"
-
+#include "AuraGameplayTags.h"
 #include "AbilitySystemComponent.h"
 
 void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
@@ -33,4 +33,11 @@ FTaggedMontage UAuraDamageGameplayAbility::GetRandomTaggedMontageFromArray(const
 
 	return FTaggedMontage();
 
+}
+
+float UAuraDamageGameplayAbility::GetDamageByDamageType(float InLevel, const FGameplayTag& DamageType)
+{
+	check(DamageTypes.Contains(DamageType));
+	int32 DDamage = DamageTypes[DamageType].GetValueAtLevel(InLevel);
+	return DDamage;
 }
