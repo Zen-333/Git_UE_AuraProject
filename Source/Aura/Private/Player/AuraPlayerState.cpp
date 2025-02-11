@@ -91,12 +91,12 @@ void AAuraPlayerState::SetSpellPoints(int32 InSpellPoints)
 
 void AAuraPlayerState::OnRep_Level(int32 OldLevel)
 {
-
+	OnLevelchangedDelegate.Broadcast(OldLevel);
 }
 
 void AAuraPlayerState::OnRep_XP(int32 OldXP)
 {
-	OnXPChangedDelegate.Broadcast(XP);
+	OnXPChangedDelegate.Broadcast(OldXP);
 }
 
 void AAuraPlayerState::OnRep_AttributePoints(int32 OldAttributePoints)

@@ -31,8 +31,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch = false, float PitchOverride = 0.f);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat Damage;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	//FScalableFloat Damage;
 
 
 };
