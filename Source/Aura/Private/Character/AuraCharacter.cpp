@@ -143,6 +143,11 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+FOnASCRegistered AAuraCharacter::GetOnASCRegisteredDelegate()
+{
+	return OnASCRegistered;
+}
+
 int32 AAuraCharacter::GetPlayerLevel_Implementation()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
@@ -174,6 +179,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+	OnASCRegistered.Broadcast(AbilitySystemComponent);
 
 	if(AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{

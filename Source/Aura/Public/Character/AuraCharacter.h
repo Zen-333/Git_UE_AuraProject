@@ -35,6 +35,8 @@ public:
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	virtual void AddToAttributePoints_Implementation(int32 InAttributePoints) override;
 
+	virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
+
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
