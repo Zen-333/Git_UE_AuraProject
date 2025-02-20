@@ -10,7 +10,7 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Interactions/CombatInterface.h"
 #include "AuraAbilityTypes.h"
-#include "AuraGameplayTags.h"
+
 
 //static const AuraDamageStatics& DamageStatics();
 
