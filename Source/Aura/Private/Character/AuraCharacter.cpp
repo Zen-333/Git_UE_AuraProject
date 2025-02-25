@@ -12,6 +12,9 @@
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "AuraGameplayTags.h"
+
 
 
 AAuraCharacter::AAuraCharacter()
@@ -54,6 +57,8 @@ void AAuraCharacter::BeginPlay()
 
 
 }
+
+
 
 void AAuraCharacter::AddToXP_Implementation(int32 InXP)
 {
@@ -143,7 +148,7 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
-FOnASCRegistered AAuraCharacter::GetOnASCRegisteredDelegate()
+FOnASCRegistered& AAuraCharacter::GetOnASCRegisteredDelegate()
 {
 	return OnASCRegistered;
 }
@@ -169,6 +174,44 @@ int32 AAuraCharacter::GetSpellPoints_Implementation() const
 	return AuraPlayerState->GetSpellPoints();
 }
 
+void AAuraCharacter::OnRep_Stunned()
+{
+	UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+
+	if(AuraASC)
+	{
+		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+		FGameplayTagContainer BlockedTags;
+		BlockedTags.AddTag(GameplayTags.Player_Block_CursorTarce);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputHeld);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputPressed);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputReleased);
+
+		if(bIsStunned)
+		{
+			AuraASC->AddLooseGameplayTags(BlockedTags);
+			StunDebuffComponent->Activate();
+
+		}else
+		{
+			AuraASC->RemoveLooseGameplayTags(BlockedTags);
+			StunDebuffComponent->Deactivate();
+		}
+	}
+}
+
+void AAuraCharacter::OnRep_Burned()
+{
+	if(bIsBurned)
+	{
+		BurnDebuffComponent->Activate();
+	}else
+	{
+		BurnDebuffComponent->Deactivate();
+	}
+}
+
 
 void AAuraCharacter::InitAbilityActorInfo()
 {
@@ -180,6 +223,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	OnASCRegistered.Broadcast(AbilitySystemComponent);
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAuraCharacter::StunTagChanged);
 
 	if(AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
