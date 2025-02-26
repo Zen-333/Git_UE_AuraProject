@@ -13,7 +13,7 @@
 #include "Interactions/PlayerInterface.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AuraAbilityTypes.h"
-#include "Interactions/CombatInterface.h"
+
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
