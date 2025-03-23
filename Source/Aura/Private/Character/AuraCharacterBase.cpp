@@ -11,13 +11,14 @@
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h" // To use DOREPLIFETIME()
+#include "Passive/PassiveNiagaraComponent.h"
 
 
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
 
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
 	BurnDebuffComponent->SetupAttachment(GetRootComponent());
@@ -39,6 +40,21 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	EffectAttachmentComponent = CreateDefaultSubobject<USceneComponent>("EffectAttachPoint");
+	EffectAttachmentComponent->SetupAttachment(GetRootComponent());
+	HaloOfProtectionComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("HaloOfProtection");
+	HaloOfProtectionComponent->SetupAttachment(EffectAttachmentComponent);
+	LifeSiphonComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("LifeSiphon");
+	LifeSiphonComponent->SetupAttachment(EffectAttachmentComponent);
+	ManaSiphonComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("ManaSiphon");
+	ManaSiphonComponent->SetupAttachment(EffectAttachmentComponent);
+}
+
+void AAuraCharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	EffectAttachmentComponent->SetWorldRotation(FRotator::ZeroRotator);
 
 }
 
@@ -83,7 +99,6 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	OnDeath.Broadcast(this);
 }
 
-
 void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bIsStunned = NewCount > 0;
@@ -105,6 +120,15 @@ void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	OnDamageDelegate.Broadcast(DamageTaken);
+
+	return DamageTaken;
 }
 
 void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -176,6 +200,11 @@ bool AAuraCharacterBase::IsBeingShocked_Implementation()
 void AAuraCharacterBase::SetIsBeingShocked_Implementation(bool bInShock)
 {
 	bIsBeingShocked = bInShock;
+}
+
+FOnDamageSignature& AAuraCharacterBase::GetOnDamageSignature()
+{
+	return OnDamageDelegate;
 }
 
 FOnDeath& AAuraCharacterBase::GetOnDeathDelegate()
