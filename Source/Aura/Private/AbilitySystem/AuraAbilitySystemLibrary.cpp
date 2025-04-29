@@ -289,7 +289,7 @@ FVector UAuraAbilitySystemLibrary::GetRadialDamageOrigin(const FGameplayEffectCo
 
 	}
 
-	return FVector::ZeroVector ;
+	return FVector::ZeroVector;
 }
 
 void UAuraAbilitySystemLibrary::SetIsRadialDamage(UPARAM(ref)FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsRadialDamage)
