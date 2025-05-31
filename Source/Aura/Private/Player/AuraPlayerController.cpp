@@ -18,6 +18,7 @@
 #include "Niagara/Public/NiagaraFunctionLibrary.h"
 #include "Actor/MagicCircle.h"
 #include "Aura/Aura.h"
+#include "Components/DecalComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
