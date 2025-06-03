@@ -31,5 +31,11 @@ public:
 	FString PlayerName = FString("Default Name");
 
 	UPROPERTY()
+	FString MapName = FString("Default Map Name");
+
+	UPROPERTY()
+	FName PlayerStartTag; // FName cant have space in them
+	
+	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = ESaveSlotStatus::Vacant;
 };

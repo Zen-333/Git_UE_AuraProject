@@ -44,6 +44,7 @@ public:
 	virtual int32 GetPlayerLevel_Implementation() override;
 	virtual int32 GetAttributePoints_Implementation() const override;
 	virtual int32 GetSpellPoints_Implementation() const override;
+	virtual void SaveProgress_Implementation(const FName& CheckpointTag) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
