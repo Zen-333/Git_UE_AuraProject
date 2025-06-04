@@ -47,6 +47,9 @@ public:
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Comon Class Defaults")
+	TSubclassOf<UGameplayEffect> PrimaryAttributesSetByCaller;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Comon Class Defaults")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Comon Class Defaults")

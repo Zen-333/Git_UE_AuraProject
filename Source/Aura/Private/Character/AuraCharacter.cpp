@@ -138,10 +138,42 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	// Init Ability Actor info for the server
 
 	InitAbilityActorInfo();
+
+	LoadProgress();
+	
 	AddCharacterAbilities();
 
 }
 
+void AAuraCharacter::LoadProgress()
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+
+	if (AuraGameMode)
+	{
+		ULoadScreenSaveGame* SaveData = AuraGameMode->RetrieveInGameSaveData();
+		
+		if (SaveData == nullptr) return;
+
+		if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+		{
+			AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+			AuraPlayerState->SetXP(SaveData->XP);
+			AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+			AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+			
+		}
+
+		if (SaveData->bFirstTimeLoadIn)
+		{
+			InitializeDefaultAttributes();
+			AddCharacterAbilities();
+		}else
+		{
+			
+		}
+	}
+}
 
 void AAuraCharacter::OnRep_PlayerState()
 {
@@ -190,6 +222,22 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 
 		SaveData->PlayerStartTag = CheckpointTag;
 
+		if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+		{
+			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			SaveData->XP = AuraPlayerState->GetXP();
+			SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
+			SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
+			
+			
+		}
+
+		SaveData->Strength = UAuraAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Intelligence = UAuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Resilience = UAuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+		SaveData->bFirstTimeLoadIn = false;
 		AuraGameMode->SaveInGameProgressData(SaveData);
 		
 	}
@@ -253,7 +301,6 @@ void AAuraCharacter::HideMagicCircle_Implementation()
 	}
 }
 
-
 void AAuraCharacter::InitAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
@@ -276,7 +323,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 
 	}
 
-	InitializeDefaultAttributes();
+	//InitializeDefaultAttributes();
 }
 
 void AAuraCharacter::MulticastLevelUpParticles_Implementation() const

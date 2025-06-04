@@ -55,6 +55,9 @@ public:
 
 	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
 	virtual void HideMagicCircle_Implementation() override;
+
+	void LoadProgress();
+	
 private:
 
 	UPROPERTY(VisibleAnywhere)
