@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Game/LoadScreenSaveGame.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
@@ -34,6 +35,7 @@ public:
 	FDeactivatePassiveAbility DeactivatePassiveAbility;
 	FActivatePassiveEffect ActivatePassiveEffect;
 
+	void AddCharacterAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData);
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
 	bool bStartupAbilitiesGiven = false;
@@ -49,6 +51,7 @@ public:
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);
 	bool SlotIsEmpty(const FGameplayTag& Slot);
 	static bool AbilityHasSlot(const FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
 	static bool AbilityHasAnySlot(const FGameplayAbilitySpec& Spec);

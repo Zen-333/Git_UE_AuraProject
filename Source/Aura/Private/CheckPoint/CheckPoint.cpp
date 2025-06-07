@@ -4,7 +4,10 @@
 #include "CheckPoint/CheckPoint.h"
 
 #include "Components/SphereComponent.h"
+#include "Game/AuraGameModeBase.h"
 #include "Interactions/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
+
 // RESEARCH WHY SUPER THIS WAY	
 ACheckPoint::ACheckPoint(const FObjectInitializer& ObjectInitializer) : Super (ObjectInitializer)
 {
@@ -25,6 +28,14 @@ ACheckPoint::ACheckPoint(const FObjectInitializer& ObjectInitializer) : Super (O
 	
 }
 
+void ACheckPoint::LoadActor_Implementation()
+{
+	if (bReached)
+	{
+		HandleGlowEffects();
+	}
+}
+
 void ACheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,6 +49,11 @@ void ACheckPoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
+		bReached = true;
+		if (AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+		{
+			AuraGM->SaveWorldState(GetWorld());
+		}
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 		HandleGlowEffects();
 	}

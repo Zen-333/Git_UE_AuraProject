@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/GameplayAbility.h"
 #include "GameFramework/SaveGame.h"
 #include "LoadScreenSaveGame.generated.h"
 
@@ -13,6 +14,72 @@ enum class ESaveSlotStatus
 	EnterName,
 	Taken
 };
+
+USTRUCT()
+struct FSavedActor
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FName ActorName = FName();
+
+	UPROPERTY()
+	FTransform Transform = FTransform();
+
+	// Serialized variables from the actor only those marked with SaveGame specifier
+	UPROPERTY()
+	TArray<uint8> Bytes;
+	
+};
+
+inline bool operator==(const FSavedActor& Left, const FSavedActor& Right)
+{
+	return Left.ActorName == Right.ActorName;
+}
+
+USTRUCT()
+struct FSavedMap
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString MapAssetName = FString();
+
+	UPROPERTY()
+	TArray<FSavedActor> SavedActors;
+
+};
+
+USTRUCT(BlueprintType)
+struct FSavedAbility
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ClassDefaults")
+	TSubclassOf<UGameplayAbility> GameplayAbility;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag AbilityTag = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag AbilityStatus = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag AbilitySlot = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag AbilityType = FGameplayTag();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 AbilityLevel;
+};
+
+// RESEARCH
+inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right)
+{
+	return Left.AbilityTag.MatchesTagExact(Right.AbilityTag);
+}
+
 
 UCLASS()
 class AURA_API ULoadScreenSaveGame : public USaveGame
@@ -65,5 +132,14 @@ public:
 
 	UPROPERTY()
 	float Vigor = 0;
+
+	UPROPERTY()
+	TArray<FSavedAbility> SavedAbilities;
+
+	UPROPERTY()
+	TArray<FSavedMap> SavedMaps;
+
+	FSavedMap GetSavedMapWithMapName(const FString& InMapName);
+	bool HasMap(const FString& InMapName);
 	
 };

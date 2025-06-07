@@ -12,6 +12,7 @@ class ULevelUpInfo;
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelChanged, int32, bool);
 
 UCLASS()
 class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -27,7 +28,7 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	FOnPlayerStatChanged OnXPChangedDelegate;
-	FOnPlayerStatChanged OnLevelchangedDelegate;
+	FOnLevelChanged OnLevelchangedDelegate;
 	FOnPlayerStatChanged OnAttributePointsChangedDelegate;
 	FOnPlayerStatChanged OnSpellPointsChangedDelegate;
 
