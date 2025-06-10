@@ -12,16 +12,25 @@
  * 
  */
 
+class IHighlightInterface;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
-class IEnemyInterface;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
 class UDamageTextComponent;
 class UNiagaraSystem;
 class AMagicCircle;
+
+
+enum class ETargetingStatus : uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting
+};
+
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -68,9 +77,11 @@ private:
 
 	void CursorTrace();
 
-	TScriptInterface<IEnemyInterface> LastActor; // can remove pointer into normal pointer
-	TScriptInterface<IEnemyInterface> ThisActor;
+	TObjectPtr<AActor> LastActor; // can remove pointer into normal pointer
+	TObjectPtr<AActor> ThisActor;
 	FHitResult CursorHit;
+	static void HighlightActor(AActor* InActor);
+	static void UnHighlightActor(AActor* InActor);
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
@@ -91,7 +102,7 @@ private:
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
-	bool bTargeting = false;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
 
 	UPROPERTY(EditDefaultsOnly)
 	float  AutoRunAcceptanceRadius = 50.f;

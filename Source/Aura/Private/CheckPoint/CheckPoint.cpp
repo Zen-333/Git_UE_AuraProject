@@ -3,6 +3,7 @@
 
 #include "CheckPoint/CheckPoint.h"
 
+#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interactions/PlayerInterface.h"
@@ -20,12 +21,17 @@ ACheckPoint::ACheckPoint(const FObjectInitializer& ObjectInitializer) : Super (O
 	CheckpointMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CheckpointMesh->SetCollisionResponseToAllChannels(ECR_Block);
 
+	CheckpointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
+	CheckpointMesh->MarkRenderStateDirty(); // Research
+	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Sphere->SetupAttachment(CheckpointMesh);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	
+
+	MoveToComponent = CreateDefaultSubobject<USceneComponent>("MoveToComponent");
+	MoveToComponent->SetupAttachment(GetRootComponent());
 }
 
 void ACheckPoint::LoadActor_Implementation()
@@ -40,8 +46,11 @@ void ACheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACheckPoint::OnSphereOverlap);
+	if(bBindOverlapCallback)
+	{
+		Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACheckPoint::OnSphereOverlap);
+		
+	}
 }
 
 void ACheckPoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -65,4 +74,23 @@ void ACheckPoint::HandleGlowEffects()
 	UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(CheckpointMesh->GetMaterial(0), this);
 	CheckpointMesh->SetMaterial(0, DynamicMaterialInstance);
 	CheckpointReached(DynamicMaterialInstance);
+}
+
+void ACheckPoint::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	OutDestination = MoveToComponent->GetComponentLocation();
+}
+
+void ACheckPoint::HighlightActor_Implementation()
+{
+	if (!bReached)
+	{
+		CheckpointMesh->SetRenderCustomDepth(true);
+		
+	}
+}
+
+void ACheckPoint::UnHighlightActor_Implementation()
+{
+	CheckpointMesh->SetRenderCustomDepth(false);
 }
