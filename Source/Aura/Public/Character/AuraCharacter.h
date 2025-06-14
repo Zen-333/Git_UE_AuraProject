@@ -35,7 +35,13 @@ public:
 	virtual void AddToPlayerLevel_Implementation(int32 InPlayerLevel) override;
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	virtual void AddToAttributePoints_Implementation(int32 InAttributePoints) override;
+	virtual void Die(const FVector& DeathImpulse) override;
 
+	UPROPERTY(EditDefaultsOnly)
+	float DeathTime = 5.f;
+
+	FTimerHandle DeathTimerHandle;
+	
 	virtual FOnASCRegistered& GetOnASCRegisteredDelegate() override;
 
 	virtual void PossessedBy(AController* NewController) override;

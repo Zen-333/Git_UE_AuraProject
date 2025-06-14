@@ -7,6 +7,7 @@
 #include "AuraGameModeBase.generated.h"
 
 
+class ULootTiers;
 class ULoadScreenSaveGame;
 class UCharacterClassInfo;
 class UAbilityInfo;
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Info")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Loot Tiers")
+	TObjectPtr<ULootTiers> LootTiers;
 
 	void SaveSlotDate(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
 	ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
@@ -58,6 +62,7 @@ public:
 
 	void SaveInGameProgressData(ULoadScreenSaveGame* SaveObject);
 
+	void PlayerDied(ACharacter* DeadCharacter);
 protected:
 
 	virtual void BeginPlay() override;

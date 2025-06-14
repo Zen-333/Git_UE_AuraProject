@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
+
+	UPROPERTY()
+	FString MapAssetName;
 	
 	// FIELD NOTIFY 
 

@@ -57,6 +57,7 @@ public:
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
 
+	void SetLevel(int32 InLevel){Level = InLevel;};
 protected:
 
 	virtual void BeginPlay() override;
@@ -76,5 +77,7 @@ protected:
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AuraAIController;
 
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnLoot();
+	
 };
