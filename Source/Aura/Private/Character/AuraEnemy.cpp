@@ -73,21 +73,17 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-
 	InitAbilityActorInfo();
 
 	if(HasAuthority())
 	{
 		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
-
 	}
 
 	if(UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
 		AuraUserWidget->SetWidgetController(this);
 	}
-
-
 
 	const UAuraAttributeSet* AuraAS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	
@@ -107,8 +103,7 @@ void AAuraEnemy::BeginPlay()
 			}
 		);
 	}
-
-
+	
 	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject
 	(
 		this,
@@ -127,7 +122,6 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 	if (AuraAIController && AuraAIController->GetBlackboardComponent())
 	{
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
-
 	}
 }
 
@@ -139,7 +133,6 @@ void AAuraEnemy::InitAbilityActorInfo()
 	if(HasAuthority())
 	{
 		InitializeDefaultAttributes();
-
 	}
 
 	OnASCRegistered.Broadcast(AbilitySystemComponent);
@@ -160,7 +153,6 @@ void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 	if (AuraAIController && AuraAIController->GetBlackboardComponent())
 	{
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
-
 	}
 }
 
@@ -169,7 +161,6 @@ void AAuraEnemy::HighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(true);
 }
-
 
 void AAuraEnemy::UnHighlightActor_Implementation()
 {

@@ -12,7 +12,7 @@ class AAuraPlayerController;
 class UAuraAttributeSet;
 class UAuraAbilitySystemComponent;
 class AAuraPlayerState;
-class UAbilityInfo;
+class UAbilityInfo;	
 
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams {

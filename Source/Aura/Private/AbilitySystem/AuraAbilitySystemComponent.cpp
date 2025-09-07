@@ -57,14 +57,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraAbility->StartupInputTag);
 			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
-			GiveAbility(AbilitySpec); // accepts const FGameplayAbilitySpec
-
 		}
-
-
-
-		//GiveAbilityAndActivateOnce(AbilitySpec);// doesnt accept const FGameplayAbilitySpec
-
 	}
 	bStartupAbilitiesGiven = true;
 	AbilitiesGivenDelegate.Broadcast();
@@ -79,10 +72,7 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
 		GiveAbilityAndActivateOnce(AbilitySpec);
-		
 	}
-
-
 }
 
 void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
@@ -102,6 +92,10 @@ void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 			}
 		}
 	}
+
+	//GiveAbility(AbilitySpec); // accepts const FGameplayAbilitySpec
+
+	//GiveAbilityAndActivateOnce(AbilitySpec);// doesnt accept const FGameplayAbilitySpec
 }
 
 void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)

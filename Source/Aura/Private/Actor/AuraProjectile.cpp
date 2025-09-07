@@ -113,11 +113,9 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 				const FVector KnockbackDirection = Rotation.Vector();
 				const FVector KnockbackForce = KnockbackDirection * DamageEffectParams.KnockbackForceMagnitude;
 				DamageEffectParams.KnockbackForce = KnockbackForce;
-
 			}
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
-
 		}
 
 		Destroy();
